@@ -11,31 +11,53 @@ public class OrcBase : MonoBehaviour
     protected SpriteRenderer sr = null;
 
     private bool isDead = false;
+	private bool needToAttack=false;
+	private Mode mode;
 
     public float speed = 3;
+	public float speedAttack=4;
 
     Vector3 pointA;
     Vector3 pointB;
     public Vector3 range = new Vector3(3, 0, 0);
 
+	private enum Mode
+	{
+		GoToA,
+		GoToB,
+		Attack
+	}
+
+	void Awake(){
+		body = this.GetComponent<Rigidbody2D> ();
+		animator = this.GetComponent<Animator> ();
+		sr = this.GetComponent<SpriteRenderer> ();
+		mode = Mode.GoToB;
+	}
+
     // Use this for initialization
     void Start()
     {
-        body = this.GetComponent<Rigidbody2D>();
-        animator = this.GetComponent<Animator>();
-        sr = this.GetComponent<SpriteRenderer>();
         pointA = this.transform.position;
         pointB = pointA + range;
     }
+		
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        float value = this.getDirection();
-        Vector2 vel = body.velocity;
-        vel.x = value * speed;
-        body.velocity = vel;
+		if (rabbitIsNear () && mode != Mode.Attack) {
+			mode = Mode.Attack;
+			animator.SetBool ("attack", true);
+	//		performAttack ();
+		}
+		else if (!rabbitIsNear () && mode == Mode.Attack) {
+			mode = Mode.GoToA;
+			animator.SetBool ("attack", false);
+		}
 
+        float value = this.getDirection();
+        
         if (value > 0)
         {
             sr.flipX = true;
@@ -45,61 +67,78 @@ public class OrcBase : MonoBehaviour
             sr.flipX = false;
         }
 
-        this.performAttack();
+		if (value != 0)
+			move (value);
+		
+		KeepInBounds();
+
     }
 
-    private enum Mode
-    {
-        GoToA,
-        GoToB,
-        Attack
-    }
+	protected bool rabbitIsNear(){
+		Vector3 rab_pos = HeroRabbit.currentRabbit.transform.position;
+		return rab_pos.x >= pointA.x && rab_pos.x <= pointB.x;
+	}
 
-    Mode mode = Mode.GoToA;
 
-    protected virtual bool guarding()
-    {
-        return true;
-    }
+	private void move(float value){
+		Vector2 vel = body.velocity;
+		if (mode == Mode.Attack) {
+			vel.x = value * speedAttack;
+	//		animator.SetBool ("attack", false);
+	//		animator.SetBool ("walk", false);
+			animator.SetBool ("run", true);
+		} else {
+	//		vel.x = value * speed;
+	//		animator.SetBool ("walk", true);
+	//		animator.SetBool ("attack", false);
+	//		animator.SetBool ("run", false);
+		}
+		body.velocity = vel;
+	}
 
+	private void KeepInBounds()
+	{
+		Vector3 my_pos = this.transform.position;
+		if (mode == Mode.GoToA && hasArrived(my_pos, this.pointA))
+		{
+			mode = Mode.GoToB;
+		}
+		else if (mode == Mode.GoToB && hasArrived(my_pos, this.pointB))
+		{
+			mode = Mode.GoToA;
+		}
+	}
+
+    
     private float getDirection()
     {
         if (isDead)
             return 0;
 
-        Vector3 my_pos = this.transform.position;
-
-        if (guarding())
-        {
-            if (mode == Mode.GoToA && hasArrived(my_pos, this.pointA))
-            {
-                mode = Mode.GoToB;
-            }
-            else if (mode == Mode.GoToB && hasArrived(my_pos, this.pointB))
-            {
-                mode = Mode.GoToA;
-            }
-
-            Vector3 target = Vector3.zero;
-
-            if (mode == Mode.GoToA)
-                target = this.pointA;
-            else if (mode == Mode.GoToB)
-                target = this.pointB;
-
-            if (my_pos.x < target.x)
-                return 1;
-            else if (my_pos.x > target.x)
+		if (mode == Mode.GoToA)
                 return -1;
-        }
+		else if (mode == Mode.GoToB)
+                return 1;
+
+		Vector3 rab_pos = HeroRabbit.currentRabbit.transform.position;
+
+		if (mode == Mode.Attack)
+		{
+			if (transform.position.x < rab_pos.x)
+			{
+				return 1;
+			}
+			else
+			{
+				return -1;
+			}
+		}
+
         return 0;
     }
 
-    protected virtual void performAttack()
-    {
-        if (mode != Mode.Attack)
-            return;
-    }
+	protected virtual void performAttack (){
+	}
 
     protected virtual float attackDirection()
     {
@@ -146,6 +185,7 @@ public class OrcBase : MonoBehaviour
         Destroy(this.gameObject);
 
     }
+
     public void OnTriggerEnter2D(Collider2D collider)
     {
         if (isDead)

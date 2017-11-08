@@ -6,7 +6,7 @@ public class Bombs : Collectable {
 
     protected override void OnRabbitHit(HeroRabbit rabbit)
     {
-        Destroy(this.gameObject);
-        rabbit.die();
+		CollectableHide();
+        rabbit.bombHit();
     }
 }

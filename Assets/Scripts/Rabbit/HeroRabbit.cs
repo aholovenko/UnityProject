@@ -118,8 +118,25 @@ public class HeroRabbit : MonoBehaviour {
             animator.SetBool("jump", true);
         }
     }
-    
 
+	private bool isBig=false;
+
+	public void bombHit(){
+		if (isBig) {
+			transform.localScale = new Vector3 (1f, 1f, 0f);
+			isBig = false;
+		} else
+			die ();
+		
+	}
+
+	public void mushroomHit(){
+		if (!isBig) {
+			transform.localScale = new Vector3 (1.5f, 1.5f, 0f);
+			isBig = true;
+		}
+	}
+    
    // StickTo isStickedTo = null;
 
     public void die()

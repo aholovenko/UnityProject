@@ -28,15 +28,15 @@ public class OrangeOrc : OrcBase {
         if (isTimeToAttack())
         {
             GameObject carrot = GameObject.Instantiate(weapon);
-
             carrot.transform.position = this.transform.position;
 
             Carrots car = carrot.GetComponent<Carrots>();
 
             Vector3 pos = HeroRabbit.currentRabbit.transform.position;
-
             Vector3 my_pos = this.transform.position;
 
+			this.animator.SetBool ("run", false);
+	//		this.animator.SetBool ("walk", false);
             this.animator.SetTrigger("attack");
 
             if (my_pos.x > pos.x)

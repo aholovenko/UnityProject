@@ -19,9 +19,11 @@ public class Carrots : Collectable{
     }
 
     public void launch (float direction) {
-        this.direction = direction;
-        if (direction < 0)
-            GetComponent<SpriteRenderer>().flipX = true;
+		this.direction = direction;
+		if (direction < 0) {
+			speed = -speed;
+			GetComponent<SpriteRenderer> ().flipX = true;
+		}
 	}
 
     private void Update()
@@ -34,6 +36,6 @@ public class Carrots : Collectable{
     protected override void OnRabbitHit(HeroRabbit rabbit)
     {
         rabbit.die();
-        Destroy(this.gameObject);
+		CollectableHide ();
     }
 }

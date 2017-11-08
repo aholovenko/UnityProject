@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class GreenOrc : OrcBase {
 
-    protected override void performAttack()
-    {
-
+    protected override void performAttack(){
+		if(!this.isDead)
+			this.animator.SetTrigger("attack");
+	//	if (SoundManager.isSoundOn()){
+	//		AttackAudio.Play();
+	//	}
     }
 
     protected override float attackDirection()

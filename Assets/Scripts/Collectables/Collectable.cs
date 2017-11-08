@@ -7,7 +7,6 @@ public class Collectable : MonoBehaviour
 
     protected virtual void OnRabbitHit(HeroRabbit rabbit)
     {
-       Destroy(this.gameObject);
     }
 
     void OnTriggerEnter2D(Collider2D collider)
@@ -17,4 +16,9 @@ public class Collectable : MonoBehaviour
             if(!rabbit.isDead)
                 OnRabbitHit(rabbit);
     }
+
+	public void CollectableHide(){
+		Destroy (this.gameObject);
+	}
+		
 }

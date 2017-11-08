@@ -9,8 +9,8 @@ public class Coins : Collectable {
 
     protected override void OnRabbitHit(HeroRabbit rabbit)
     {
-        coinsLabel.text = coins_quantity.ToString();
-        Destroy(this.gameObject);
-    
+	//	LevelController.Instance.AddCoins(1);
+ //       coinsLabel.text = coins_quantity.ToString();
+		CollectableHide ();
         }
 }
