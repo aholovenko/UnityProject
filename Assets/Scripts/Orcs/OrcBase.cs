@@ -10,7 +10,7 @@ public class OrcBase : MonoBehaviour
     protected Animator animator = null;
     protected SpriteRenderer sr = null;
 
-    private bool isDead = false;
+    protected bool isDead = false;
 	private bool needToAttack=false;
 	private Mode mode;
 
