@@ -14,8 +14,8 @@ public class OrcBase : MonoBehaviour
 	private bool needToAttack=false;
 	private Mode mode;
 
-    public float speed = 3;
-	public float speedAttack=4;
+    public float speed = 2;
+	//protected float speedAttack=4;
 
     Vector3 pointA;
     Vector3 pointB;
@@ -46,18 +46,30 @@ public class OrcBase : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+		if (isDead)
+			return;
+
 		if (rabbitIsNear () && mode != Mode.Attack) {
 			mode = Mode.Attack;
-			animator.SetBool ("attack", true);
+			animator.SetTrigger ("attack");
 	//		performAttack ();
 		}
 		else if (!rabbitIsNear () && mode == Mode.Attack) {
 			mode = Mode.GoToA;
-			animator.SetBool ("attack", false);
+			animator.SetTrigger ("attack");
 		}
 
         float value = this.getDirection();
-        
+
+		animator.SetBool ("run", true);
+
+		Vector2 vel = body.velocity;
+		vel.x = value * speed;
+		body.velocity = vel;
+
+	//	if (value != 0)
+	//		move (value);
+		
         if (value > 0)
         {
             sr.flipX = true;
@@ -66,10 +78,7 @@ public class OrcBase : MonoBehaviour
         {
             sr.flipX = false;
         }
-
-		if (value != 0)
-			move (value);
-		
+			
 		KeepInBounds();
 
     }
@@ -81,19 +90,14 @@ public class OrcBase : MonoBehaviour
 
 
 	private void move(float value){
-		Vector2 vel = body.velocity;
 		if (mode == Mode.Attack) {
-			vel.x = value * speedAttack;
 	//		animator.SetBool ("attack", false);
 	//		animator.SetBool ("walk", false);
-			animator.SetBool ("run", true);
+	//		animator.SetBool ("run", true);
 		} else {
-	//		vel.x = value * speed;
 	//		animator.SetBool ("walk", true);
 	//		animator.SetBool ("attack", false);
-	//		animator.SetBool ("run", false);
 		}
-		body.velocity = vel;
 	}
 
 	private void KeepInBounds()

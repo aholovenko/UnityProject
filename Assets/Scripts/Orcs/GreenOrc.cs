@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class GreenOrc : OrcBase {
 
+	public float speedA=3;
+
     protected override void performAttack(){
 		if(!this.isDead)
 			this.animator.SetTrigger("attack");
 	//	if (SoundManager.isSoundOn()){
 	//		AttackAudio.Play();
 	//	}
+		float value = this.attackDirection();
+
+		Vector2 vel = body.velocity;
+		vel.x = value * speedA;
+		this.body.velocity = vel;
     }
 
     protected override float attackDirection()
