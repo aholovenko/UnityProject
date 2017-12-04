@@ -12,13 +12,15 @@ public class GreenOrc : OrcBase {
 	//	if (SoundManager.isSoundOn()){
 	//		AttackAudio.Play();
 	//	}
+	//	if(mode==Mode.Attack){
 		float value = this.attackDirection();
 
-		Vector2 vel = body.velocity;
-		vel.x = value * speedA;
-		this.body.velocity = vel;
-    }
 
+	//Vector2 vel = body.velocity;
+	///	vel.x = value * speedA;
+	//	this.body.velocity = vel;
+   // }
+	}
     protected override float attackDirection()
     {
         Vector3 rab_pos = HeroRabbit.currentRabbit.transform.position;

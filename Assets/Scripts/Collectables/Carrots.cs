@@ -21,7 +21,7 @@ public class Carrots : Collectable{
     public void launch (float direction) {
 		this.direction = direction;
 		if (direction < 0) {
-			speed = -speed;
+	//		speed = -speed;
 			GetComponent<SpriteRenderer> ().flipX = true;
 		}
 	}
@@ -29,7 +29,6 @@ public class Carrots : Collectable{
     private void Update()
     {
         Vector3 pos = this.transform.position;
-
         this.transform.position = pos + Vector3.right * this.direction*Time.deltaTime*speed;
     }
 

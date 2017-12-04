@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class LevelController : MonoBehaviour {
 
-    public static LevelController current;
+    public static LevelController current=null;
 
-    private void Awake()
+	public GameObject settingsPrefab;
+	public MyButton pauseButton;
+
+    void Awake()
     {
         current = this;
     }
+
+	void Start(){
+//		pauseButton.signalOnClick.AddListener (this.showSettings);
+	}
 
     Vector3 startingPosition;
 

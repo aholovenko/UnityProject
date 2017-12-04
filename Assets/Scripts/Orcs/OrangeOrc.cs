@@ -8,7 +8,13 @@ public class OrangeOrc : OrcBase {
     public float MinDistanceToAttack = 2;
     public float MinInterval = 0.5f;
     float last;
+	public float normalSpeed=2;
 
+	void Start(){
+	//	base.Start ();
+		speed = normalSpeed;
+	}
+		
     bool isTimeToAttack()
     {
         Vector3 rab_pos = HeroRabbit.currentRabbit.transform.position;
@@ -31,8 +37,8 @@ public class OrangeOrc : OrcBase {
 			//		this.animator.SetBool ("walk", false);
 			this.animator.SetTrigger("attack");
 
-            GameObject carrot = GameObject.Instantiate(weapon);
-            carrot.transform.position = this.transform.position;
+            GameObject carrot = GameObject.Instantiate(this.weapon);
+	//		carrot.transform.position = this.transform.position+Vector3(0,1,0);
 
             Carrots car = carrot.GetComponent<Carrots>();
 
@@ -48,7 +54,6 @@ public class OrangeOrc : OrcBase {
                 car.launch(1);
         }
      }
-
 
      IEnumerator later()
      {
