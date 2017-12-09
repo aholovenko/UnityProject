@@ -5,17 +5,14 @@ using UnityEngine;
 
 public class OrcBase : MonoBehaviour
 {
-
     protected Rigidbody2D body = null;
     protected Animator animator = null;
     protected SpriteRenderer sr = null;
 
     protected bool isDead = false;
-	private bool needToAttack=false;
 	private Mode mode;
 
     public float speed = 2;
-	//protected float speedAttack=4;
 
     Vector3 pointA;
     Vector3 pointB;
@@ -51,30 +48,30 @@ public class OrcBase : MonoBehaviour
 
 		if (rabbitIsNear () && mode != Mode.Attack) {
 			mode = Mode.Attack;
-//			animator.SetTrigger ("attack");
 			performAttack ();
 		}
-		else if (!rabbitIsNear () && mode == Mode.Attack) {
+
+		if (!rabbitIsNear () && mode == Mode.Attack) {
 			mode = Mode.GoToA;
-//			animator.SetTrigger ("attack");
+			this.animator.SetBool ("attack", false);
 		}
-
-	//	move ();
- 
-		KeepInBounds();
-
+		if(mode!=Mode.Attack)
+		move (getDirection());
+		patrolAB ();
     }
 
-	protected bool rabbitIsNear(){
-		Vector3 rab_pos = HeroRabbit.currentRabbit.transform.position;
-		return rab_pos.x >= pointA.x && rab_pos.x <= pointB.x;
+
+	protected virtual void performAttack (){
+		Vector2 vel = body.velocity;
+		float dir = attackDirection ();
+		vel.x = dir * speed;
+		body.velocity = vel;
+		this.animator.SetBool ("attack", true);
 	}
 
-
-	private void move(float value){
+	private void move(float dir){
 		Vector2 vel = body.velocity;
-		float dir = getDirection();
-
+		this.animator.SetBool("walk", true);
 		if (Math.Abs (dir) > 0) {
 			vel.x = dir * speed;
 			body.velocity = vel;
@@ -82,11 +79,11 @@ public class OrcBase : MonoBehaviour
 				sr.flipX = true;
 			else
 				sr.flipX = false;
-			animator.SetBool("run",true);
 		}
+
 	}
 
-	private void KeepInBounds()
+	private void patrolAB()
 	{
 		Vector3 my_pos = this.transform.position;
 		if (mode == Mode.GoToA && hasArrived(my_pos, this.pointA))
@@ -99,7 +96,12 @@ public class OrcBase : MonoBehaviour
 		}
 	}
 
-    
+	protected bool rabbitIsNear(){
+		Vector3 rab_pos = HeroRabbit.currentRabbit.transform.position;
+		return rab_pos.x >= pointA.x && rab_pos.x <= pointB.x;
+	//	return rab_pos.x >= pointA.x && rab_pos.x <= pointB.x&&(Math.Abs(rab_pos.y -pointA.y)<0.2f);
+	}	
+
     private float getDirection()
     {
         if (isDead)
@@ -111,35 +113,23 @@ public class OrcBase : MonoBehaviour
                 return 1;
 
 		Vector3 rab_pos = HeroRabbit.currentRabbit.transform.position;
-
-		if (mode == Mode.Attack)
-		{
-			if (transform.position.x < rab_pos.x)
-			{
-				return 1;
-			}
-			else
-			{
-				return -1;
-			}
-		}
-
         return 0;
     }
-
-	protected virtual void performAttack (){
-	}
 
     protected virtual float attackDirection()
     {
         Vector3 rab_pos = HeroRabbit.currentRabbit.transform.position;
         Vector3 my_pos = this.transform.position;
-        if (Mathf.Abs(rab_pos.x - my_pos.x) < 0.2f)
-            return 0;
-        if (rab_pos.x < my_pos.x)
-            return -1;
-        else
-            return 1;
+		if (Mathf.Abs (rab_pos.x - my_pos.x) < 0.2f) {
+			return 0;
+		}
+		if (rab_pos.x < my_pos.x) {
+			sr.flipX = false;
+			return -1;
+		} else {
+			sr.flipX = true;
+			return 1;
+		}
     }
 
     bool hasArrived(Vector3 a, Vector3 b)
@@ -152,12 +142,15 @@ public class OrcBase : MonoBehaviour
         float rab_y = rabbit.transform.position.y;
         float my_y = this.transform.position.y;
 
-        if (my_y < rab_y && rab_y - my_y > 0.5f)
-            this.orcDie();
+		if (my_y < rab_y && rab_y - my_y > 0.5f)
+			this.orcDie ();
+		else
+			rabbit.die ();
     }
 
     void orcDie()
     {
+		this.animator.SetBool("walk", false);
         this.animator.SetBool("die", true);
 
         this.isDead = true;
@@ -170,7 +163,7 @@ public class OrcBase : MonoBehaviour
 
     IEnumerator hideMeLater()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
 
         Destroy(this.gameObject);
 

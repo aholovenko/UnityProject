@@ -117,7 +117,19 @@ public class HeroRabbit : MonoBehaviour {
         {
             animator.SetBool("jump", true);
         }
-    }
+
+		if(hit) {
+			//Перевіряємо чи ми опинились на платформі
+			if(hit.transform != null
+				&& hit.transform.GetComponent<MovingPlatform>() != null){
+				//Приліпаємо до платформи
+			SetNewParent(this.transform, hit.transform);
+			}
+		} else {
+			//Ми в повітрі відліпаємо під платформи
+			SetNewParent(this.transform, this.hero);
+		}
+				}
 
 	private bool isBig=false;
 
@@ -128,6 +140,19 @@ public class HeroRabbit : MonoBehaviour {
 		} else
 			die ();
 		
+	}
+
+	static void SetNewParent(Transform obj, Transform new_parent) {
+		if(obj.transform.parent != new_parent) {
+			//Засікаємо позицію у Глобальних координатах
+			Vector3 pos = obj.transform.position;
+			//Встановлюємо нового батька
+			obj.transform.parent = new_parent;
+			//Після зміни батька координати кролика зміняться
+			//Оскільки вони тепер відносно іншого об’єкта
+			//повертаємо кролика в ті самі глобальні координати
+			obj.transform.position = pos;
+		}
 	}
 
 	public void mushroomHit(){

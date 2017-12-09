@@ -6,7 +6,7 @@ public class MovingPlatform : MonoBehaviour {
 
     public Vector3 MoveBy;
 	private float speed=2;
-	public float delay=3f;
+	public float delay=0;
 	private float arrivedTime;
 
     Vector3 pointA;
@@ -28,8 +28,7 @@ public class MovingPlatform : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		
+	void FixedUpdate () {
 		if (arrivedTime + delay > Time.time)
 			return;
 		
