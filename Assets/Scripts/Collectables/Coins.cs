@@ -6,6 +6,7 @@ public class Coins : Collectable {
 
     public UILabel coinsLabel;
     public float coins_quantity = 0;
+	public AudioClip attackSound = null;
 
     protected override void OnRabbitHit(HeroRabbit rabbit)
     {

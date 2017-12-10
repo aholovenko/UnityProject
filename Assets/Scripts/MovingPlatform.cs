@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class MovingPlatform : MonoBehaviour {
 
-    public Vector3 MoveBy;
-	private float speed=2;
+	public Vector3 MoveBy;
+	public Vector3 speed;
 	public float delay=0;
 	private float arrivedTime;
 
@@ -28,7 +28,7 @@ public class MovingPlatform : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 		if (arrivedTime + delay > Time.time)
 			return;
 		
@@ -36,13 +36,15 @@ public class MovingPlatform : MonoBehaviour {
 			arrivedTime = Time.time;
 			mode = Mode.toA;
 			target = pointA;
+			this.transform.Translate (-speed * Time.deltaTime);
 		}
 		if (mode == Mode.toA && hasArrived (transform.position, pointA)) {
 			arrivedTime = Time.time;
 			mode = Mode.toB;
 			target = pointB;
+			this.transform.Translate (speed * Time.deltaTime);
 		}
-		transform.position=Vector2.MoveTowards(transform.position,target,Time.deltaTime*speed);
+
 	}
 
 	bool hasArrived(Vector3 a, Vector3 b)

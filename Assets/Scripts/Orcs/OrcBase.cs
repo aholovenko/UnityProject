@@ -55,9 +55,10 @@ public class OrcBase : MonoBehaviour
 			mode = Mode.GoToA;
 			this.animator.SetBool ("attack", false);
 		}
-		if(mode!=Mode.Attack)
-		move (getDirection());
-		patrolAB ();
+		if (mode != Mode.Attack) {
+			patrolAB ();
+			move (getDirection ());
+		}
     }
 
 
@@ -120,7 +121,8 @@ public class OrcBase : MonoBehaviour
     {
         Vector3 rab_pos = HeroRabbit.currentRabbit.transform.position;
         Vector3 my_pos = this.transform.position;
-		if (Mathf.Abs (rab_pos.x - my_pos.x) < 0.2f) {
+		if (Mathf.Abs (rab_pos.x - my_pos.x) < 0.1f) {
+			this.animator.SetBool("walk", false);
 			return 0;
 		}
 		if (rab_pos.x < my_pos.x) {

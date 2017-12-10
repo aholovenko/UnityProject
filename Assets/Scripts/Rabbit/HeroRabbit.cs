@@ -16,7 +16,7 @@ public class HeroRabbit : MonoBehaviour {
     Animator animator = null;
     SpriteRenderer sr = null;
 
-    public Transform hero = null;
+    public Transform heroParent = null;
 
     public static HeroRabbit currentRabbit = null;
 
@@ -32,7 +32,7 @@ public class HeroRabbit : MonoBehaviour {
         sr = this.GetComponent<SpriteRenderer>();
         //Зберігаємо позицію кролика на початку
         LevelController.current.setStartPosition(transform.position);
-        this.hero = this.transform.parent;
+        this.heroParent = this.transform.parent;
     }
 
     // Update is called once per frame
@@ -127,7 +127,7 @@ public class HeroRabbit : MonoBehaviour {
 			}
 		} else {
 			//Ми в повітрі відліпаємо під платформи
-			SetNewParent(this.transform, this.hero);
+			SetNewParent(this.transform, this.heroParent);
 		}
 				}
 
