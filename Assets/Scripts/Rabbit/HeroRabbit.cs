@@ -16,6 +16,13 @@ public class HeroRabbit : MonoBehaviour {
     Animator animator = null;
     SpriteRenderer sr = null;
 
+	public AudioClip dieSound = null;
+	AudioSource dieSource=null;
+
+	AudioSource sourceRun=null;
+
+	AudioSource sourceJump=null;
+
     public Transform heroParent = null;
 
     public static HeroRabbit currentRabbit = null;
@@ -33,7 +40,14 @@ public class HeroRabbit : MonoBehaviour {
         //Зберігаємо позицію кролика на початку
         LevelController.current.setStartPosition(transform.position);
         this.heroParent = this.transform.parent;
+
+		dieSource = gameObject.AddComponent<AudioSource> ();
+		dieSource.clip = dieSound;
     }
+
+	void onDeath(){
+		dieSource.Play ();
+	}
 
     // Update is called once per frame
     void FixedUpdate()
@@ -166,6 +180,7 @@ public class HeroRabbit : MonoBehaviour {
 
     public void die()
     {
+		onDeath ();
         animator.SetBool("die", true);
         GetComponent<BoxCollider2D>().enabled = false;
         body.isKinematic = true;

@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PopUpBase : MonoBehaviour {
 
-	public MyButton closeButton;
+	//public MyButton closeButton;
 	public MyButton backButton;
-	public TweenAlpha backgroundAnimation;
+	//public TweenAlpha backgroundAnimation;
 
 	public void close(){
 		Time.timeScale = 1;
@@ -15,16 +15,11 @@ public class PopUpBase : MonoBehaviour {
 
 
 	void Start () {
-		closeButton.signalOnClick.AddListener (this.close);
+	//	closeButton.signalOnClick.AddListener (this.close);
 		backButton.signalOnClick.AddListener (this.close);
 
-		backgroundAnimation.Play ();
+	//	backgroundAnimation.Play ();
+		Time.timeScale = 0;
+	}
 
-		Time.timeScale = 0.1f;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

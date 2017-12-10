@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Setting : PopUpBase {
+public class SettingsPopUp : PopUpBase {
 
-	public MyButton closeButton;
-	public MyButton backButton;
 
 }

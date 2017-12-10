@@ -70,6 +70,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coinsLabel: {fileID: 0}
   coins_quantity: 0
+  sound: {fileID: 8300000, guid: d07c1afb94cf04c50a369bdf0faaf7cf, type: 3}
 --- !u!212 &212212291593413526
 SpriteRenderer:
   m_ObjectHideFlags: 1
